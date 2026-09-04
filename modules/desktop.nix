@@ -12,8 +12,9 @@
     user = username;
   };
 
-  environment.systemPackages = with pkgs.kdePackages; [
-    plasma-bigscreen
+  environment.systemPackages = with pkgs; [
+    kdePackages.plasma-bigscreen
+    vacuum-tube
   ];
 
   hardware.graphics.enable = true;
