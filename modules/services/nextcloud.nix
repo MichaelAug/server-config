@@ -4,7 +4,7 @@
   services.nextcloud = {
     enable = true;
 
-    hostName = "192.168.0.91";
+    hostName = "n150.tail617a34.ts.net";
     package = pkgs.nextcloud34;
     database.createLocally = true;
     config = {
@@ -13,20 +13,19 @@
       dbtype = "pgsql";
     };
 
+    appstoreEnable = true;
     configureRedis = true;
 
     settings = {
       trusted_domains = [
-        "192.168.0.91"
+        "n150.tail617a34.ts.net"
       ];
+
+      overwriteprotocol = "https";
     };
   };
 
   networking.firewall.allowedTCPPorts = [
     80
   ];
-
-  services.postgresql.enable = true;
-
-  services.redis.servers.nextcloud.enable = true;
 }
