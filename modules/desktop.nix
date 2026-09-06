@@ -15,6 +15,10 @@
   environment.systemPackages = with pkgs; [
     kdePackages.plasma-bigscreen
     vacuum-tube
+    zed-editor
+    helix
+    git
+    firefox
   ];
 
   hardware.graphics.enable = true;
