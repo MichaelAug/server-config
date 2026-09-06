@@ -21,6 +21,10 @@
         "n150.tail617a34.ts.net"
       ];
 
+      trusted_proxies = [
+        "127.0.0.1"
+      ];
+
       overwriteprotocol = "https";
     };
   };
