@@ -10,10 +10,13 @@
 
     settings = {
       PasswordAuthentication = false;
+      PubkeyAuthentication = true;
+      X11Forwarding = false;
+      AllowAgentForwarding = false;
       PermitRootLogin = "no";
       KbdInteractiveAuthentication = false;
-      ClientAliveCountMax = 1;
-
+      ClientAliveInterval = 300;
+      ClientAliveCountMax = 2;
       # Don't reveal unnecessary information
       VersionAddendum = null;
     };
