@@ -14,6 +14,17 @@ NixOS configuration for my home server, managed with flakes.
 
 All `.nix` files in `nixos/modules/` are automatically discovered and loaded by the flake. Each module should be self-contained around a particular system concern or service.
 
+## Files and Directories Not Created by NixOS
+
+The following must be created or supplied separately when setting up a new system:
+
+| Path | Purpose |
+|---|---|
+| `/home/server/.ssh/authorized_keys` | SSH public keys used to authenticate the `server` user |
+| `/srv/immich` | Directory used by Immich for photo/video storage |
+
+The rest of the service configuration and required system directories are created and managed by NixOS.
+
 ## Tailscale Serve
 
 | Port | Service | Explanation |
