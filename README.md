@@ -14,6 +14,32 @@ NixOS configuration for my home server, managed with flakes.
 
 All `.nix` files in `nixos/modules/` are automatically discovered and loaded by the flake. Each module should be self-contained around a particular system concern or service.
 
+## Tailscale Serve
+
+| Port | Service | Explanation |
+|---:|---|---|
+| `443` | Immich | Tailscale HTTPS → `127.0.0.1:2283` |
+| `8443` | Jellyfin | Tailscale HTTPS → `127.0.0.1:8096` |
+| `8444` | Home Assistant | Tailscale HTTPS → `127.0.0.1:8123` |
+| `8445` | Syncthing | Tailscale HTTPS → `127.0.0.1:8384` |
+
+Tailscale Serve terminates HTTPS and reverse-proxies each port to the service's local HTTP port. All endpoints are tailnet-only.
+
+```text
+https://n150.tail617a34.ts.net:443
+    → http://127.0.0.1:2283
+
+https://n150.tail617a34.ts.net:8443
+    → http://127.0.0.1:8096
+
+https://n150.tail617a34.ts.net:8444
+    → http://127.0.0.1:8123
+
+https://n150.tail617a34.ts.net:8445
+    → http://127.0.0.1:8384
+
+```
+
 ## Rebuild
 
 From the config directory:
