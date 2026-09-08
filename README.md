@@ -31,7 +31,6 @@ The rest of the service configuration and required system directories are create
 | Port | Service | Explanation |
 |---:|---|---|
 | `443` | Immich | Tailscale HTTPS → `127.0.0.1:2283` |
-| `8443` | Jellyfin | Tailscale HTTPS → `127.0.0.1:8096` |
 | `8444` | Home Assistant | Tailscale HTTPS → `127.0.0.1:8123` |
 | `8445` | Syncthing | Tailscale HTTPS → `127.0.0.1:8384` |
 | `8446` | Radicale| Tailscale HTTPS → `127.0.0.1:5232` |
@@ -41,9 +40,6 @@ Tailscale Serve terminates HTTPS and reverse-proxies each port to the service's 
 ```text
 https://n150.tail617a34.ts.net:443
     → http://127.0.0.1:2283 Immich
-
-https://n150.tail617a34.ts.net:8443
-    → http://127.0.0.1:8096 Jellyfin
 
 https://n150.tail617a34.ts.net:8444
     → http://127.0.0.1:8123 Home Assistant
