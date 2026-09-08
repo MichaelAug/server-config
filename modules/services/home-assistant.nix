@@ -23,6 +23,7 @@
 
     extraComponents = [
       "default_config"
+      "homekit_controller"
       "homekit"
       "mobile_app"
       "mqtt"
