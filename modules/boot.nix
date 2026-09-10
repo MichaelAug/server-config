@@ -7,7 +7,8 @@
     enable = true;
     device = "nodev";
     efiSupport = true;
+    efiInstallAsRemovable = true;
   };
 
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.efi.canTouchEfiVariables = false;
 }
