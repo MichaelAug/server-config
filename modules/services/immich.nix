@@ -1,6 +1,11 @@
 { ... }:
 
 {
+  # Create media directory if it doesn't exist
+  systemd.tmpfiles.rules = [
+    "d /srv/immich 0750 immich users -"
+  ];
+
   services.immich = {
     enable = true;
 

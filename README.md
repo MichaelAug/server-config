@@ -4,14 +4,6 @@ NixOS configuration for my home server, managed with flakes.
 
 ## Structure
 
-```text
-.
-├── flake.nix
-└── modules/
-    ├── hardware-configuration.nix
-    ├── ...
-```
-
 All `.nix` files in `nixos/modules/` are automatically discovered and loaded by the flake. Each module should be self-contained around a particular system concern or service.
 
 ## Files and Directories Not Created by NixOS
@@ -21,19 +13,11 @@ The following must be created or supplied separately when setting up a new syste
 | Path | Purpose |
 |---|---|
 | `/home/server/.ssh/authorized_keys` | SSH public keys used to authenticate the `server` user |
-| `/srv/immich` | Directory used by Immich for photo/video storage |
-| `/var/lib/radicale/users` | Directory used by Radicale. Create using `htpasswd' |
+| `/var/lib/radicale/users` | File used by Radicale. Create using `htpasswd' |
 
 The rest of the service configuration and required system directories are created and managed by NixOS.
 
 ## Tailscale Serve
-
-| Port | Service | Explanation |
-|---:|---|---|
-| `443` | Immich | Tailscale HTTPS → `127.0.0.1:2283` |
-| `8444` | Home Assistant | Tailscale HTTPS → `127.0.0.1:8123` |
-| `8445` | Syncthing | Tailscale HTTPS → `127.0.0.1:8384` |
-| `8446` | Radicale| Tailscale HTTPS → `127.0.0.1:5232` |
 
 Tailscale Serve terminates HTTPS and reverse-proxies each port to the service's local HTTP port. All endpoints are tailnet-only.
 
