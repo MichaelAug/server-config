@@ -2,10 +2,8 @@
   lib,
   stdenv,
   fetchurl,
-  libsecret,
-  autoPatchelfHook,
 }:
-
+# TODO: replace when proton-drive-cli is packaged in nixpkgs
 stdenv.mkDerivation {
   pname = "proton-drive-cli";
   version = "0.8.0";
@@ -16,15 +14,10 @@ stdenv.mkDerivation {
   };
 
   dontUnpack = true;
+  dontConfigure = true;
+  dontBuild = true;
   dontStrip = true;
-
-  nativeBuildInputs = [
-    autoPatchelfHook
-  ];
-
-  buildInputs = [
-    libsecret
-  ];
+  dontPatchELF = true;
 
   installPhase = ''
     install -Dm755 "$src" "$out/bin/proton-drive"

@@ -11,8 +11,7 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in
     {
-      packages.${system}.proton-drive-cli =
-              pkgs.callPackage ./packages/proton-drive-cli.nix { };
+      packages.${system}.proton-drive-cli = pkgs.callPackage ./packages/proton-drive-cli.nix { };
 
       nixosConfigurations.server = nixpkgs.lib.nixosSystem {
         specialArgs = {
