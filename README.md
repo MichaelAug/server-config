@@ -14,6 +14,8 @@ The following must be created or supplied separately when setting up a new syste
 |---|---|
 | `/home/server/.ssh/authorized_keys` | SSH public keys used to authenticate the `server` user |
 | `/var/lib/radicale/users` | File used by Radicale. Create using `htpasswd' |
+| `/etc/rclone/proton.conf` | Rclone configuration containing the Proton Drive authentication credentials. NEVER COMMIT THE CONFIG |
+
 
 The rest of the service configuration and required system directories are created and managed by NixOS.
 
