@@ -4,16 +4,19 @@
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
   outputs =
-    { nixpkgs, ... }:
+    inputs@{ nixpkgs, ... }:
     let
       system = "x86_64-linux";
       username = "server";
       pkgs = nixpkgs.legacyPackages.${system};
     in
     {
+      packages.${system}.proton-drive-cli =
+              pkgs.callPackage ./packages/proton-drive-cli.nix { };
+
       nixosConfigurations.server = nixpkgs.lib.nixosSystem {
         specialArgs = {
-          username = username;
+          inherit username inputs;
         };
 
         modules = nixpkgs.lib.filesystem.listFilesRecursive ./modules;
