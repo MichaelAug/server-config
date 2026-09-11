@@ -19,14 +19,22 @@
 
   # Create the directories used for manually managed backup material.
   #
-  # These are separate from service data such as Radicale and Immich.
-  # Anything placed in these directories is picked up by the
-  # corresponding Restic repository.
+  # The Restic repositories live on the host's internal SSD. They are
+  # subsequently replicated to the external HDD and, later, another
+  # NixOS machine over SSH.
   systemd.tmpfiles.rules = [
     "d /backup 0750 server users -"
     "d /backup/personal 0750 server users -"
     "d /backup/personal/critical 0750 server users -"
     "d /backup/personal/other 0750 server users -"
+
+    # Primary Restic repositories on the internal SSD.
+    #
+    # These contain encrypted Restic data and should only be accessible
+    # by root, since the Restic services run as root by default.
+    "d /srv/restic 0700 root root -"
+    "d /srv/restic/critical 0700 root root -"
+    "d /srv/restic/other 0700 root root -"
   ];
 
   services.restic.backups = {
@@ -34,8 +42,8 @@
     #
     # Contains data that is particularly important to preserve
     critical = {
-      # Restic repository stored on the external HDD.
-      repository = "/mnt/backup/critical";
+      # Restic repository stored on the external .
+      repository = "/srv/restic/critical";
       passwordFile = "/etc/restic/critical-password";
 
       paths = [
@@ -71,7 +79,7 @@
     # the useful parts of the Immich data.
     other = {
       # Restic repository stored on the external HDD.
-      repository = "/mnt/backup/other";
+      repository = "/srv/restic/other";
 
       # Separate password from the Critical repository.
       passwordFile = "/etc/restic/other-password";
