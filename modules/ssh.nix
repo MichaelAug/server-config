@@ -1,6 +1,7 @@
 { username, ... }:
 
 {
+  # Configure SSH server
   services.openssh = {
     enable = true;
 
@@ -21,4 +22,12 @@
       VersionAddendum = null;
     };
   };
+
+  # Configure SSH client
+  programs.ssh.extraConfig = ''
+    Host nix-desktop
+      User restic
+      IdentityFile /root/.ssh/n150
+      IdentitiesOnly yes
+  '';
 }
