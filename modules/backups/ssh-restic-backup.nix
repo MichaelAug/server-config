@@ -10,6 +10,8 @@ let
   sshRepository = "sftp:restic@nix-desktop:/srv/restic";
 in
 {
+  # IMPORTANT: restic copy does not prune old generations, nothing handles this for now
+
   systemd.services.restic-copy-ssh = {
     description = "Copy Restic backups over SSH";
 

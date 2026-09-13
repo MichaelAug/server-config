@@ -8,6 +8,8 @@ let
   protonEndpoint = "rest:http://127.0.0.1:8080";
 in
 {
+  # IMPORTANT: restic copy does not prune old generations, nothing handles this for now
+
   systemd.services.proton-restic-endpoint = {
     description = "Restic REST endpoint backed by Proton Drive";
 

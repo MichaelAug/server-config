@@ -1,6 +1,9 @@
 { pkgs, ... }:
 
 let
+
+  # IMPORTANT: restic copy does not prune old generations, nothing handles this for now
+
   criticalRepository = "/srv/restic/critical";
   personalRepository = "/srv/restic/personal";
   criticalPasswordFile = "/etc/restic/critical-password";
