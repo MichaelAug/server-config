@@ -2,6 +2,7 @@
 
 let
   criticalRepository = "/srv/restic/critical";
+  personalRepository = "/srv/restic/personal";
   criticalPasswordFile = "/etc/restic/critical-password";
 
   protonEndpoint = "rest:http://127.0.0.1:8080";
@@ -14,7 +15,7 @@ in
       ExecStart = ''
         ${pkgs.rclone}/bin/rclone \
           --config /etc/rclone/proton.conf \
-          serve restic proton:/backups/critical \
+          serve restic proton:/backups \
           --addr 127.0.0.1:8080 \
           --protondrive-replace-existing-draft
       '';
@@ -37,14 +38,11 @@ in
 
       ExecStartPre = "${pkgs.systemd}/bin/systemctl start proton-restic-endpoint.service";
 
-      ExecStart = ''
-        ${pkgs.restic}/bin/restic \
-          --repo ${protonEndpoint} \
-          --password-file ${criticalPasswordFile} \
-          copy \
-          --from-repo ${criticalRepository} \
-          --from-password-file ${criticalPasswordFile}
-      '';
+      ExecStart = [
+        "${pkgs.restic}/bin/restic --repo ${protonEndpoint}/critical --password-file ${criticalPasswordFile} copy --from-repo ${criticalRepository} --from-password-file ${criticalPasswordFile}"
+
+        "${pkgs.restic}/bin/restic --repo ${protonEndpoint}/personal --password-file ${criticalPasswordFile} copy --from-repo ${personalRepository} --from-password-file ${criticalPasswordFile}"
+      ];
 
       ExecStopPost = "${pkgs.systemd}/bin/systemctl stop proton-restic-endpoint.service";
 
