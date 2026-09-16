@@ -25,6 +25,8 @@
 
   };
 
+  programs.moonlight-qt.enable = true;
+
   environment.systemPackages = with pkgs; [
     kdePackages.plasma-bigscreen
     vacuum-tube
