@@ -1,74 +1,64 @@
-{ pkgs, ... }:
+{ lib, ... }:
+
 let
-  frigateModel = pkgs.stdenvNoCC.mkDerivation {
-    pname = "frigate-openvino-model";
-    version = "0.17.2";
-
-    src = ../../openvino-model;
-
-    installPhase = ''
-      mkdir -p $out
-      cp -r ./* $out/
-    '';
-  };
+  frigateConfig = ../../frigate.yml;
+  cameraPasswordFile = "/var/lib/frigate/camera_password";
+  frigateEnvironmentFile = "/run/frigate/env";
 in
 {
-  environment.systemPackages = with pkgs; [
-    intel-compute-runtime
-    level-zero
-  ];
+  virtualisation.podman.enable = true;
 
-  systemd.services.frigate.environment = {
-    OCL_ICD_VENDORS = "${pkgs.intel-compute-runtime}/etc/OpenCL/vendors";
-  };
+  virtualisation.oci-containers = {
+    backend = "podman";
 
-  services.frigate = {
-    enable = true;
-    hostname = "frigate";
+    containers.frigate = {
+      image = "ghcr.io/blakeblackshear/frigate:0.17.2";
 
-    settings = {
-      mqtt.enabled = false;
+      ports = [
+        "127.0.0.1:80:8971"
+      ];
 
-      ffmpeg.hwaccel_args = "preset-vaapi";
+      volumes = [
+        "/var/lib/frigate/config:/config"
+        "/var/lib/frigate/media:/media/frigate"
+      ];
 
-      detectors.ov = {
-        type = "openvino";
-        device = "GPU";
+      environment = {
+        TZ = "Europe/London";
       };
 
-      model = {
-        width = 300;
-        height = 300;
-        input_tensor = "nhwc";
-        input_pixel_format = "bgr";
-        path = "${frigateModel}/ssdlite_mobilenet_v2.xml";
-        labelmap_path = "${frigateModel}/coco_91cl_bkgr.txt";
-      };
+      environmentFiles = [
+        frigateEnvironmentFile
+      ];
 
-      cameras.outside = {
-        ffmpeg.inputs = [
-          {
-            path = "rtsp://admin:CAMERA_PASSWORD@192.168.0.239:554/Preview_01_sub";
-            roles = [ "detect" ];
-          }
-          {
-            path = "rtsp://admin:CAMERA_PASSWORD@192.168.0.239:554/Preview_01_main";
-            roles = [ "record" ];
-          }
-        ];
-
-        detect = {
-          width = 640;
-          height = 480;
-          fps = 5;
-        };
-
-        record.enabled = true;
-      };
+      extraOptions = [
+        "--device=/dev/dri/renderD128:/dev/dri/renderD128"
+        "--shm-size=256m"
+      ];
     };
   };
 
-  services.nginx.virtualHosts.frigate.serverAliases = [
-    "n150.tail617a34.ts.net"
-  ];
+  # NOTE: frigate.yml config will only be copied if it doesn't exist in /var/lib/frigate/config/
+  systemd.services.podman-frigate.preStart = lib.mkBefore ''
+    install -d -m 0750 /var/lib/frigate
+    install -d -m 0750 /var/lib/frigate/config
+    install -d -m 0750 /var/lib/frigate/media
+
+    if [ ! -e ${cameraPasswordFile} ]; then
+      echo "Missing ${cameraPasswordFile}" >&2
+      exit 1
+    fi
+
+    if [ ! -e /var/lib/frigate/config/config.yml ]; then
+      install -m 0640 ${frigateConfig} /var/lib/frigate/config/config.yml
+    fi
+
+    install -d -m 0750 /run/frigate
+
+    printf 'FRIGATE_RTSP_PASSWORD=%s\n' \
+      "$(cat ${cameraPasswordFile})" \
+      > ${frigateEnvironmentFile}
+
+    chmod 0600 ${frigateEnvironmentFile}
+  '';
 }
