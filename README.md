@@ -36,7 +36,9 @@ https://n150.tail617a34.ts.net:8445
 https://n150.tail617a34.ts.net:8446
     → http://127.0.0.1:5232 Radicale / CalDAV
 
-```
+https://n150.tail617a34.ts.net:8447
+    → http://127.0.0.1:80 Frigate
+    ```
 
 ## Rebuild
 
