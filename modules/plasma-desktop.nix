@@ -29,6 +29,7 @@
 
   environment.systemPackages = with pkgs; [
     kdePackages.plasma-bigscreen
+    kdePackages.plasma-keyboard
     vacuum-tube
     firefox
     kodi

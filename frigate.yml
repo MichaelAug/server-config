@@ -37,5 +37,10 @@ cameras:
       height: 480
       fps: 5
 
+    objects:
+      track:
+         - person
+         - car
+
     record:
       enabled: true
