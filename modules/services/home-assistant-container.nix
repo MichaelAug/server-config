@@ -15,6 +15,9 @@ in
   # Make sure NixOS HA is not enabled, we're using a container
   services.home-assistant.enable = lib.mkForce false;
 
+  # Direct access for devices on the home network.
+  networking.firewall.interfaces.enp2s0.allowedTCPPorts = [ 8123 ];
+
   virtualisation.podman.enable = true;
   virtualisation.oci-containers = {
     backend = "podman";
