@@ -50,10 +50,17 @@ cameras:
         Main stream: outside
         Substream: outside_sub
 
+    snapshots:
+      enabled: true
+      retain:
+        default: 7
+
     detect:
+      enabled: true
       width: 640
       height: 480
       fps: 5
+
 
     objects:
       track:
@@ -69,7 +76,7 @@ cameras:
       continuous:
         days: 0
       motion:
-        days: 3
+        days: 1
       alerts:
         retain:
           days: 7
@@ -81,14 +88,13 @@ cameras:
 
     zones:
       front_drive:
-        coordinates: 0,0.183,0.494,0,1,0.316,0.926,0.649,0.786,1,0.289,1,0,0.612
+        coordinates:
+          0,0.183,0.366,0.05,0.577,0.049,1,0.316,0.926,0.649,0.786,1,0.289,1,0,0.612
         loitering_time: 0
-        objects:
-          - person
-          - car
         friendly_name: Front Drive
 
-        inertia: 3
+        inertia: 2
+        enabled: true
     review:
       alerts:
         labels:
@@ -98,16 +104,19 @@ cameras:
       detections:
         labels:
           - car
-        required_zones: front_drive
+        required_zones: []
     motion:
       threshold: 20
       contour_area: 10
       improve_contrast: true
 
       mask:
-        - 0.283,0.075,0.487,0,0.22,0
-        - 0.502,0,1,0,1,0.309
-version: 0.17-0
+        motion_mask_1:
+          friendly_name: Motion Mask 1
+          enabled: true
+          coordinates:
+            1,0,0.487,0,0.22,0,0.23,0.097,0.367,0.047,0.583,0.048,1,0.313
+version: 0.18-0
 
 semantic_search:
   enabled: true
