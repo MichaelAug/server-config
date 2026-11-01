@@ -12,7 +12,7 @@ in
     backend = "podman";
 
     containers.frigate = {
-      image = "ghcr.io/blakeblackshear/frigate:0.17.2";
+      image = "ghcr.io/blakeblackshear/frigate:0.18.2";
 
       ports = [
         "127.0.0.1:80:8971"

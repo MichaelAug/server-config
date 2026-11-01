@@ -2,15 +2,15 @@ mqtt:
   enabled: true
   host: host.containers.internal
   user: frigate
-  password: "{FRIGATE_PASSWORD}"
+  password: '{FRIGATE_PASSWORD}'
   topic_prefix: frigate
 
 go2rtc:
   streams:
     outside:
-      - "rtsp://admin:{FRIGATE_PASSWORD}@192.168.0.239:554/Preview_01_main"
+      - rtsp://admin:{FRIGATE_PASSWORD}@192.168.0.239:554/Preview_01_main
     outside_sub:
-      - "rtsp://admin:{FRIGATE_PASSWORD}@192.168.0.239:554/Preview_01_sub"
+      - rtsp://admin:{FRIGATE_PASSWORD}@192.168.0.239:554/Preview_01_sub
 
 tls:
   enabled: false
@@ -59,13 +59,17 @@ cameras:
       track:
         - person
         - car
+      filters:
+        person:
+          min_score: 0.4
+          threshold: 0.6
 
     record:
       enabled: true
       continuous:
         days: 0
       motion:
-        days: 7
+        days: 3
       alerts:
         retain:
           days: 7
@@ -77,20 +81,32 @@ cameras:
 
     zones:
       front_drive:
-        coordinates: 0,0.404,0.506,0.005,0.998,0.292,0.786,0.995,0.16,0.989,0.007,0.624
+        coordinates: 0,0.183,0.494,0,1,0.316,0.926,0.649,0.786,1,0.289,1,0,0.612
         loitering_time: 0
-        objects: person
+        objects:
+          - person
+          - car
         friendly_name: Front Drive
 
+        inertia: 3
     review:
       alerts:
+        labels:
+          - person
         required_zones: front_drive
 
+      detections:
+        labels:
+          - car
+        required_zones: front_drive
     motion:
       threshold: 20
       contour_area: 10
       improve_contrast: true
 
+      mask:
+        - 0.283,0.075,0.487,0,0.22,0
+        - 0.502,0,1,0,1,0.309
 version: 0.17-0
 
 semantic_search:

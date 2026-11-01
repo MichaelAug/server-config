@@ -55,6 +55,13 @@ Or using `nh`:
 nh os switch .
 ```
 
+## Updating Home Assistant and Frigate
+
+Change the version tag in the `image` setting of the relevant module:
+
+- Home Assistant: `modules/services/home-assistant-container.nix`
+- Frigate: `modules/services/frigate-container.nix`
+
 ## Development
 
 run `nix develop` to get dev tools such as `nixd`, `nil`, `nixfmt`, `statix`, and `deadnix`.
