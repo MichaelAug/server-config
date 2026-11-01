@@ -20,17 +20,5 @@
 
         modules = nixpkgs.lib.filesystem.listFilesRecursive ./modules;
       };
-
-      # Tools to work with this repo. Run `nix develop` to use
-      devShells.${system}.default = pkgs.mkShell {
-        packages = with pkgs; [
-          nixd # Nix language server
-          nil # Another nix language server
-          nixfmt-tree # Formatter for Nix code
-          statix # Lints and suggestions for Nix
-          deadnix # Find dead code
-          nh # Nix command helper
-        ];
-      };
     };
 }

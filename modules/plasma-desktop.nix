@@ -33,10 +33,6 @@
     vacuum-tube
     firefox
     kodi
-
-    # Dev
     zed-editor
-    helix
-    git
   ];
 }

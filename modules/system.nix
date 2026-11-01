@@ -18,4 +18,15 @@
   };
 
   system.stateVersion = "23.05";
+
+  environment.systemPackages = with pkgs; [
+    helix
+    git
+    nixd # Nix language server
+    nil # Another nix language server
+    nixfmt-tree # Formatter for Nix code
+    statix # Lints and suggestions for Nix
+    deadnix # Find dead code
+    nh # Nix command helper
+  ];
 }
