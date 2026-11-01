@@ -29,4 +29,9 @@
     deadnix # Find dead code
     nh # Nix command helper
   ];
+
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+  };
 }

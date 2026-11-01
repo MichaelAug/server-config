@@ -1,8 +1,8 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 
 let
   frigateConfig = ../../frigate.yml;
-  cameraPasswordFile = "/var/lib/frigate/camera_password";
+  passwordFile = "/var/lib/home-automation/password";
   frigateEnvironmentFile = "/run/frigate/env";
 in
 {
@@ -20,7 +20,7 @@ in
 
       volumes = [
         "/var/lib/frigate/config:/config"
-        "/var/lib/frigate/media:/media/frigate"
+        "/mnt/backup/frigate:/media/frigate"
       ];
 
       environment = {
@@ -38,14 +38,27 @@ in
     };
   };
 
-  # NOTE: frigate.yml config will only be copied if it doesn't exist in /var/lib/frigate/config/
+  systemd.services.podman-frigate = {
+    after = [ "mosquitto.service" ];
+    wants = [ "mosquitto.service" ];
+    unitConfig = {
+      RequiresMountsFor = "/mnt/backup";
+      ConditionPathIsMountPoint = "/mnt/backup";
+    };
+  };
+
+  # Seed the config once; subsequent edits are managed in Frigate's UI.
   systemd.services.podman-frigate.preStart = lib.mkBefore ''
     install -d -m 0750 /var/lib/frigate
     install -d -m 0750 /var/lib/frigate/config
-    install -d -m 0750 /var/lib/frigate/media
+    if ! ${pkgs.util-linux}/bin/mountpoint -q /mnt/backup; then
+      echo "Frigate recording HDD is not mounted" >&2
+      exit 1
+    fi
+    install -d -m 0750 /mnt/backup/frigate
 
-    if [ ! -e ${cameraPasswordFile} ]; then
-      echo "Missing ${cameraPasswordFile}" >&2
+    if [ ! -s ${passwordFile} ]; then
+      echo "Missing ${passwordFile}" >&2
       exit 1
     fi
 
@@ -55,8 +68,9 @@ in
 
     install -d -m 0750 /run/frigate
 
-    printf 'FRIGATE_RTSP_PASSWORD=%s\n' \
-      "$(cat ${cameraPasswordFile})" \
+    umask 077
+    printf 'FRIGATE_PASSWORD=%s\n' \
+      "$(cat ${passwordFile})" \
       > ${frigateEnvironmentFile}
 
     chmod 0600 ${frigateEnvironmentFile}

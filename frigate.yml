@@ -1,5 +1,16 @@
 mqtt:
-  enabled: false
+  enabled: true
+  host: host.containers.internal
+  user: frigate
+  password: "{FRIGATE_PASSWORD}"
+  topic_prefix: frigate
+
+go2rtc:
+  streams:
+    outside:
+      - "rtsp://admin:{FRIGATE_PASSWORD}@192.168.0.239:554/Preview_01_main"
+    outside_sub:
+      - "rtsp://admin:{FRIGATE_PASSWORD}@192.168.0.239:554/Preview_01_sub"
 
 tls:
   enabled: false
@@ -24,13 +35,20 @@ cameras:
   outside:
     ffmpeg:
       inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.0.239:554/Preview_01_sub
+        - path: rtsp://127.0.0.1:8554/outside_sub
+          input_args: preset-rtsp-restream
           roles:
             - detect
 
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.0.239:554/Preview_01_main
+        - path: rtsp://127.0.0.1:8554/outside
+          input_args: preset-rtsp-restream
           roles:
             - record
+
+    live:
+      streams:
+        Main stream: outside
+        Substream: outside_sub
 
     detect:
       width: 640
@@ -39,8 +57,53 @@ cameras:
 
     objects:
       track:
-         - person
-         - car
+        - person
+        - car
 
     record:
       enabled: true
+      continuous:
+        days: 0
+      motion:
+        days: 7
+      alerts:
+        retain:
+          days: 7
+          mode: all
+      detections:
+        retain:
+          days: 7
+          mode: all
+
+    zones:
+      front_drive:
+        coordinates: 0,0.404,0.506,0.005,0.998,0.292,0.786,0.995,0.16,0.989,0.007,0.624
+        loitering_time: 0
+        objects: person
+        friendly_name: Front Drive
+
+    review:
+      alerts:
+        required_zones: front_drive
+
+    motion:
+      threshold: 20
+      contour_area: 10
+      improve_contrast: true
+
+version: 0.17-0
+
+semantic_search:
+  enabled: true
+  model_size: small
+
+face_recognition:
+  enabled: false
+  model_size: small
+
+lpr:
+  enabled: false
+
+classification:
+  bird:
+    enabled: false

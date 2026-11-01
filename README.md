@@ -4,7 +4,7 @@ NixOS configuration for my home server, managed with flakes.
 
 ## Structure
 
-All `.nix` files in `nixos/modules/` are automatically discovered and loaded by the flake. Each module should be self-contained around a particular system concern or service.
+All `.nix` files in `modules/` are automatically discovered and loaded by the flake. Each module should be self-contained around a particular system concern or service.
 
 ## Files and Directories Not Created by NixOS
 
@@ -15,7 +15,7 @@ The following must be created or supplied separately when setting up a new syste
 | `/home/server/.ssh/authorized_keys` | SSH public keys used to authenticate the `server` user |
 | `/var/lib/radicale/users` | File used by Radicale. Create using `htpasswd' |
 | `/etc/rclone/proton.conf` | Rclone configuration containing the Proton Drive authentication credentials. |
-| `/var/lib/frigate/camera_password` | Frigate camera password |
+| `/var/lib/home-automation/password` | Shared camera and Frigate/HA MQTT password |
 
 
 The rest of the service configuration and required system directories are created and managed by NixOS.
